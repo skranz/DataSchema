@@ -1,0 +1,18 @@
+Package: DataSchema
+Type: Package
+Title: Tools for schemas describing and validating data sets
+Version: 0.1.0
+Author: Sebastian Kranz
+Maintainer: Sebastian Kranz <sebastian.kranz@uni-ulm.de>
+Description: JSON Schemas (see https://json-schema.org/learn/getting-started-step-by-step)
+  can be useful for many things like generating SQL databases, structured RDS data sets,
+  validation of data, structuring AI output, creating autmatic documentation etc.
+  I have used and developed several ad-hoc schema specifications / tools in different 
+  packages, like "dbmisc" (yaml), "repboxdb" (yaml), rgemini (JSON schema from R).
+  This package shall provide helper functions to build, convert and use schemas.
+  While importa and export to json-schema is possible, it is skewed to my taste and
+  my previous application.
+License: GPL >= 2.0
+Encoding: UTF-8
+LazyData: true
+Depends: restorepoint
