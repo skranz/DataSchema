@@ -1,5 +1,11 @@
 
 example = function() {
+  obj = sx_obj(name="", num=5)
+  obj = schema_obj(list(name="", num=5))
+  arr = schema_arr(schema_obj(list(name="", num=5)))
+  arr = schema_arr(list(name="", num=5.2))
+
+
   schema = schema_arr(
     list(
       city = schema_str("Largest city in the country"),
@@ -13,8 +19,6 @@ example = function() {
   schema = new_schema(
     sx_arr(facts = arr_resp(name="fact1", description="fact_description"))
   )
-
-  schema = response_schema(arr_resp(city = "Paris", country="France", famous_building="Eiffel Tower", population = 5.2, facts = arr_resp(name="fact1", description="fact_description")))
 
 }
 
@@ -80,7 +84,7 @@ to_schema = function(x) {
 
 schema_str = function(description=NULL, is_key=NULL) {
   x = nn_locals_to_list()
-  x$type = "str"
+  x$type = "string"
   class(x) = c("schema_str",  "schema", "list")
   x
 }
@@ -103,7 +107,7 @@ schema_arr = function(items, description=NULL, minItems=NULL,uniqueItems=NULL) {
   x = nn_locals_to_list()
   restore.point("schema_arr")
   if (!is_schema(items) & is.list(items)) {
-    x$items = sx_obj(items)
+    x$items = schema_obj(items)
   } else {
     x$items = to_schema(x$items)
   }
