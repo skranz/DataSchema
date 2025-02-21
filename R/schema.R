@@ -12,7 +12,7 @@ example = function() {
       country = "France",
       famous_building="Eiffel Tower",
       population = schema_num("Population of the country in million inhabitants"),
-      facts = schema_arr(list(name="fact1", description="fact_description"))
+      facts = schema_arr(list(name="fact1", descr="fact_descr"))
     )
   )
 }
@@ -70,21 +70,21 @@ to_schema = function(x) {
 }
 
 #
-# schema_field = function(type="object", description=NULL, minimum=NULL, exclusiveMinimum=NULL, ...) {
-#   if (type=="object") return(schema_object(description=description, ...))
-#   if (type=="arr") return(schema_arr(description=description, ...))
+# schema_field = function(type="object", descr=NULL, minimum=NULL, exclusiveMinimum=NULL, ...) {
+#   if (type=="object") return(schema_object(descr=descr, ...))
+#   if (type=="arr") return(schema_arr(descr=descr, ...))
 #   x = nn_locals_to_list()
 #   x
 # }
 
-schema_str = function(description=NULL, allow_null=FALSE, enum=NULL, pattern=NULL, minLength=NULL, maxLength=NULL,is_key=NULL, ...) {
+schema_str = function(descr=NULL, allow_null=FALSE, enum=NULL, pattern=NULL, minLength=NULL, maxLength=NULL,is_key=NULL, ...) {
   x = nn_locals_to_list(...)
   x$type = "string"
   class(x) = c("schema_str",  "schema", "list")
   x
 }
 
-schema_int = function(description=NULL, allow_null = FALSE, enum=NULL, minimum=NULL, exclusiveMinimum=NULL, maximum=NULL, exclusiveMaximum=NULL,is_key=NULL,  ...) {
+schema_int = function(descr=NULL, allow_null = FALSE, enum=NULL, minimum=NULL, exclusiveMinimum=NULL, maximum=NULL, exclusiveMaximum=NULL,is_key=NULL,  ...) {
   x = nn_locals_to_list(...)
   x$type = "integer"
   class(x) = c("schema_int","schema", "list")
@@ -93,7 +93,7 @@ schema_int = function(description=NULL, allow_null = FALSE, enum=NULL, minimum=N
 
 
 
-schema_num = function(description=NULL, allow_null=FALSE, enum=NULL, minimum=NULL, exclusiveMinimum=NULL, maximum=NULL, exclusiveMaximum=NULL,is_key=NULL,  ...) {
+schema_num = function(descr=NULL, allow_null=FALSE, enum=NULL, minimum=NULL, exclusiveMinimum=NULL, maximum=NULL, exclusiveMaximum=NULL,is_key=NULL,  ...) {
   x = nn_locals_to_list(...)
   x$type = "numeric"
   class(x) = c("schema_num", "schema", "list")
@@ -101,7 +101,7 @@ schema_num = function(description=NULL, allow_null=FALSE, enum=NULL, minimum=NUL
 }
 
 
-schema_bool = function(description=NULL, allow_null = FALSE,is_key=NULL,  ...) {
+schema_bool = function(descr=NULL, allow_null = FALSE,is_key=NULL,  ...) {
   x = nn_locals_to_list(...)
   x$type = "bool"
   class(x) = c("schema_int","schema", "list")
@@ -109,7 +109,7 @@ schema_bool = function(description=NULL, allow_null = FALSE,is_key=NULL,  ...) {
 }
 
 
-schema_arr = function(items, description=NULL, minItems=NULL,maxItems=NULL, uniqueItems=NULL, ...) {
+schema_arr = function(items, descr=NULL, minItems=NULL,maxItems=NULL, uniqueItems=NULL, ...) {
   x = nn_locals_to_list(...)
   restore.point("schema_arr")
   if (!is_schema(items) & is.list(items)) {
@@ -122,7 +122,7 @@ schema_arr = function(items, description=NULL, minItems=NULL,maxItems=NULL, uniq
   x
 }
 
-schema_obj = function(properties, description=NULL, ...) {
+schema_obj = function(properties, descr=NULL, ...) {
   x = nn_locals_to_list(...)
   restore.point("schema_obj")
   if (length(properties)==0) stop("An object schema needs at least one property.")
