@@ -1,3 +1,14 @@
+no_schema_obj_msg = function(x) {
+  paste("We expected a valid schema object but got class ", paste0(class(x), collapse=", "))
+}
+
+reduce_to_fields = function(x, fields) {
+  cl = class(x)
+  x = x[intersect(names(x), fields)]
+  class(x) = cl
+  x
+}
+
 nn_locals_to_list <- function(...) {
   # Get the environment of the calling function
   caller_env <- parent.frame()

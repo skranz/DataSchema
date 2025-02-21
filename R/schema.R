@@ -80,7 +80,6 @@ to_schema = function(x) {
 schema_str = function(description=NULL, allow_null=FALSE, enum=NULL, pattern=NULL, minLength=NULL, maxLength=NULL,is_key=NULL, ...) {
   x = nn_locals_to_list(...)
   x$type = "string"
-  if (allow_null) x$type = c(x$type, "null")
   class(x) = c("schema_str",  "schema", "list")
   x
 }
@@ -88,18 +87,27 @@ schema_str = function(description=NULL, allow_null=FALSE, enum=NULL, pattern=NUL
 schema_int = function(description=NULL, allow_null = FALSE, enum=NULL, minimum=NULL, exclusiveMinimum=NULL, maximum=NULL, exclusiveMaximum=NULL,is_key=NULL,  ...) {
   x = nn_locals_to_list(...)
   x$type = "integer"
-  if (allow_null) x$type = c(x$type, "null")
   class(x) = c("schema_int","schema", "list")
   x
 }
 
+
+
 schema_num = function(description=NULL, allow_null=FALSE, enum=NULL, minimum=NULL, exclusiveMinimum=NULL, maximum=NULL, exclusiveMaximum=NULL,is_key=NULL,  ...) {
   x = nn_locals_to_list(...)
   x$type = "numeric"
-  if (allow_null) x$type = c(x$type, "null")
   class(x) = c("schema_num", "schema", "list")
   x
 }
+
+
+schema_bool = function(description=NULL, allow_null = FALSE,is_key=NULL,  ...) {
+  x = nn_locals_to_list(...)
+  x$type = "bool"
+  class(x) = c("schema_int","schema", "list")
+  x
+}
+
 
 schema_arr = function(items, description=NULL, minItems=NULL,maxItems=NULL, uniqueItems=NULL, ...) {
   x = nn_locals_to_list(...)
@@ -124,21 +132,6 @@ schema_obj = function(properties, description=NULL, ...) {
   x
 }
 
-schema_obj_slice = function(x, vars) {
-  prob = x$properties
-  vars = intersect(names(prob), vars)
-  x$properties = x$properties[vars]
-  x
-}
-
-schema_obj_merge = function(x,y) {
-  x = to_schema(x)
-  y = to_schema(y)
-
-  yvar = setdiff(names(y$properties), names(x$properties))
-  x$properties = c(x$properties, y$properties[y])
-  x
-}
 #' Create an Object Response Template
 #'
 #' This function creates a template for a single JSON object response.
