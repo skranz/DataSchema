@@ -9,18 +9,22 @@ valid_json_schema_fields = function(x) {
   stop("valid_json_schema_fields: Unknown x")
 }
 
-to_json_schema = function(x) {
+to_json_schema = function(x, add_description=FALSE) {
   if (is.null(x)) return(NULL)
   restore.point("to_json_schema")
   if ("json_schema" %in% class(x)) return(x)
   if (isTRUE(x$allow_null)) x$type = union(x$type,"null")
   valid_fields = valid_json_schema_fields(x)
+  if (add_description) {
+    x = change_names(x,"descr","description")
+    valid_fields = union(valid_fields, "description")
+  }
 
   x = reduce_to_fields(x, valid_fields)
   if (is_schema_obj(x)) {
-    x$properties = lapply(x$properties, to_json_schema)
+    x$properties = lapply(x$properties, to_json_schema, add_description=add_description)
   } else if (is_schema_arr(x)) {
-    x$items = to_json_schema(x$items)
+    x$items = to_json_schema(x$items, add_description = add_description)
   }
   class(x) = union("json_schema", class(x))
   x

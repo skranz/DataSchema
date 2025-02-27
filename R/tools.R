@@ -1,3 +1,13 @@
+change_names = function(x, old_names, new_names) {
+  restore.point("change_names")
+  if (is.null(names(x))) return(x)
+  ind = match(old_names,names(x))
+  use = !is.na(ind)
+
+  names(x)[ind[use]] = new_names[use]
+  x
+}
+
 no_schema_obj_msg = function(x) {
   paste("We expected a valid schema object but got class ", paste0(class(x), collapse=", "))
 }
