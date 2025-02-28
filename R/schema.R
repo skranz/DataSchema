@@ -95,7 +95,7 @@ schema_int = function(descr=NULL, allow_null = FALSE, enum=NULL, minimum=NULL, e
 
 schema_num = function(descr=NULL, allow_null=FALSE, enum=NULL, minimum=NULL, exclusiveMinimum=NULL, maximum=NULL, exclusiveMaximum=NULL,is_key=NULL,  ...) {
   x = nn_locals_to_list(...)
-  x$type = "numeric"
+  x$type = "number"
   class(x) = c("schema_num", "schema", "list")
   x
 }
