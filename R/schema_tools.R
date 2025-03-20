@@ -9,7 +9,7 @@ valid_json_schema_fields = function(x) {
   stop("valid_json_schema_fields: Unknown x")
 }
 
-to_json_schema = function(x, add_description=FALSE) {
+to_json_schema_obj = function(x, add_description=FALSE) {
   if (is.null(x)) return(NULL)
   restore.point("to_json_schema")
   if ("json_schema" %in% class(x)) return(x)
@@ -22,14 +22,20 @@ to_json_schema = function(x, add_description=FALSE) {
 
   x = reduce_to_fields(x, valid_fields)
   if (is_schema_obj(x)) {
-    x$properties = lapply(x$properties, to_json_schema, add_description=add_description)
+    x$properties = lapply(x$properties, to_json_schema_obj, add_description=add_description)
   } else if (is_schema_arr(x)) {
-    x$items = to_json_schema(x$items, add_description = add_description)
+    x$items = to_json_schema_obj(x$items, add_description = add_description)
   }
   class(x) = union("json_schema", class(x))
   x
 }
 
+to_json_schema = function(x, add_description=FALSE, pretty=TRUE, auto_unbox=TRUE, ...) {
+  if (is.null(x)) return(NULL)
+  json_obj = to_json_schema_obj(x, add_description=TRUE)
+  json = jsonlite::toJSON(json_obj,pretty = pretty,auto_unbox = auto_unbox, ...)
+  json
+}
 
 #' Select specific properties of a schema object
 #' possibly rename

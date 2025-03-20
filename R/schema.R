@@ -79,14 +79,14 @@ to_schema = function(x) {
 
 schema_str = function(descr=NULL, allow_null=FALSE, enum=NULL, pattern=NULL, minLength=NULL, maxLength=NULL,is_key=NULL, ...) {
   x = nn_locals_to_list(...)
-  x$type = "string"
+  x = add_schema_type(x, "string")
   class(x) = c("schema_str",  "schema", "list")
   x
 }
 
 schema_int = function(descr=NULL, allow_null = FALSE, enum=NULL, minimum=NULL, exclusiveMinimum=NULL, maximum=NULL, exclusiveMaximum=NULL,is_key=NULL,  ...) {
   x = nn_locals_to_list(...)
-  x$type = "integer"
+  x = add_schema_type(x, "integer")
   class(x) = c("schema_int","schema", "list")
   x
 }
@@ -95,7 +95,7 @@ schema_int = function(descr=NULL, allow_null = FALSE, enum=NULL, minimum=NULL, e
 
 schema_num = function(descr=NULL, allow_null=FALSE, enum=NULL, minimum=NULL, exclusiveMinimum=NULL, maximum=NULL, exclusiveMaximum=NULL,is_key=NULL,  ...) {
   x = nn_locals_to_list(...)
-  x$type = "number"
+  x = add_schema_type(x, "number")
   class(x) = c("schema_num", "schema", "list")
   x
 }
@@ -103,7 +103,7 @@ schema_num = function(descr=NULL, allow_null=FALSE, enum=NULL, minimum=NULL, exc
 
 schema_bool = function(descr=NULL, allow_null = FALSE,is_key=NULL,  ...) {
   x = nn_locals_to_list(...)
-  x$type = "bool"
+  x = add_schema_type(x, "bool")
   class(x) = c("schema_int","schema", "list")
   x
 }
@@ -117,7 +117,7 @@ schema_arr = function(items, descr=NULL, minItems=NULL,maxItems=NULL, uniqueItem
   } else {
     x$items = to_schema(x$items)
   }
-  x$type = "array"
+  x = add_schema_type(x, "array")
   class(x) <- c("schema_arr", "schema", "list")
   x
 }
@@ -127,7 +127,8 @@ schema_obj = function(properties, descr=NULL, ...) {
   restore.point("schema_obj")
   if (length(properties)==0) stop("An object schema needs at least one property.")
   x$properties = lapply(properties, to_schema)
-  x$type = "object"
+  x = add_schema_type(x, "object")
+
   class(x) <- c("schema_obj", "schema", "list")
   x
 }

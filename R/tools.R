@@ -19,6 +19,15 @@ reduce_to_fields = function(x, fields) {
   x
 }
 
+add_schema_type = function(x,type) {
+  if (!"type" %in% names(x)) {
+    x = c(list(type=type), x)
+  } else {
+    x$type = type
+  }
+  x
+}
+
 nn_locals_to_list <- function(...) {
   # Get the environment of the calling function
   caller_env <- parent.frame()
