@@ -1,3 +1,42 @@
+
+# To do: add recursion for nested objects...
+schema_fields_to_rclasses = function(x, given_classes=NULL) {
+
+  if (is_schema_arr(x)) {
+    schema_fields_to_rclasses(x$item)
+  }
+  if (is_schema_obj(x)) {
+    x = x$properties
+  }
+  restore.point("schema_fields_to_rclasses")
+  if (is.list(x)) {
+    types = sapply(x, function(x) x$type[1])
+    class = schema_types_to_rclass(types)
+    class[class[!names(class) %in% names(given_classes)]]
+    return(c(given_classes,class))
+  }
+  return(NULL)
+}
+
+# converts string vector of json response schema types to a string vector of r classes
+schema_types_to_rclass = function(types) {
+  # Vectorized conversion using case_when
+  r_classes <- case_when(
+    tolower(types) == "string" ~ "character",
+    tolower(types) == "number" ~ "numeric",
+    tolower(types) == "integer" ~ "integer",
+    tolower(types) == "boolean" ~ "logical",
+    tolower(types) == "bool" ~ "logical",
+    tolower(types) == "null" ~ "NULL",
+    tolower(types) == "array" ~ "list",
+    tolower(types) == "object" ~ "list",
+    TRUE ~ "unknown"
+  )
+  if (!is.null(names(types)))
+    names(r_classes) = names(types)
+  return(r_classes)
+}
+
 valid_json_schema_fields = function(x) {
   if (is_schema_arr(x) | isTRUE(x=="array")) return(c("type", "items", "minItems","maxItems", "uniqueItems"))
   if (is_schema_obj(x) | isTRUE(x=="object")) return(c("type", "properties"))
@@ -9,11 +48,17 @@ valid_json_schema_fields = function(x) {
   stop("valid_json_schema_fields: Unknown x")
 }
 
-to_json_schema_obj = function(x, add_description=FALSE) {
+to_json_schema_obj = function(x, add_description=FALSE, allow_null_def=FALSE, exclude_allow_null_def = c("object","array")) {
   if (is.null(x)) return(NULL)
   restore.point("to_json_schema")
   if ("json_schema" %in% class(x)) return(x)
-  if (isTRUE(x$allow_null)) x$type = union(x$type,"null")
+  if (isTRUE(x$allow_null)) {
+    x$type = union(x$type,"null")
+  } else if (allow_null_def & !isTRUE(x$allow_null==FALSE)) {
+    if (!any(x$type %in% exclude_allow_null_def)) {
+      x$type = union(x$type,"null")
+    }
+  }
   valid_fields = valid_json_schema_fields(x)
   if (add_description) {
     x = change_names(x,"descr","description")
@@ -22,17 +67,17 @@ to_json_schema_obj = function(x, add_description=FALSE) {
 
   x = reduce_to_fields(x, valid_fields)
   if (is_schema_obj(x)) {
-    x$properties = lapply(x$properties, to_json_schema_obj, add_description=add_description)
+    x$properties = lapply(x$properties, to_json_schema_obj, add_description=add_description, allow_null_def=allow_null_def, exclude_allow_null_def = exclude_allow_null_def)
   } else if (is_schema_arr(x)) {
-    x$items = to_json_schema_obj(x$items, add_description = add_description)
+    x$items = to_json_schema_obj(x$items, add_description = add_description, allow_null_def=allow_null_def, exclude_allow_null_def = exclude_allow_null_def)
   }
   class(x) = union("json_schema", class(x))
   x
 }
 
-to_json_schema = function(x, add_description=FALSE, pretty=TRUE, auto_unbox=TRUE, ...) {
+to_json_schema = function(x, add_description=FALSE, allow_null_def=FALSE, exclude_allow_null_def = c("object","array"), pretty=TRUE, auto_unbox=TRUE, ...) {
   if (is.null(x)) return(NULL)
-  json_obj = to_json_schema_obj(x, add_description=TRUE)
+  json_obj = to_json_schema_obj(x, add_description=add_description, allow_null_def = allow_null_def, exclude_allow_null_def = exclude_allow_null_def)
   json = jsonlite::toJSON(json_obj,pretty = pretty,auto_unbox = auto_unbox, ...)
   json
 }

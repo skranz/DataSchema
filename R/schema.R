@@ -77,14 +77,14 @@ to_schema = function(x) {
 #   x
 # }
 
-schema_str = function(descr=NULL, allow_null=FALSE, enum=NULL, pattern=NULL, minLength=NULL, maxLength=NULL,is_key=NULL, ...) {
+schema_str = function(descr=NULL, allow_null=NULL, enum=NULL, pattern=NULL, minLength=NULL, maxLength=NULL,is_key=NULL, ...) {
   x = nn_locals_to_list(...)
   x = add_schema_type(x, "string")
   class(x) = c("schema_str",  "schema", "list")
   x
 }
 
-schema_int = function(descr=NULL, allow_null = FALSE, enum=NULL, minimum=NULL, exclusiveMinimum=NULL, maximum=NULL, exclusiveMaximum=NULL,is_key=NULL,  ...) {
+schema_int = function(descr=NULL, allow_null = NULL, enum=NULL, minimum=NULL, exclusiveMinimum=NULL, maximum=NULL, exclusiveMaximum=NULL,is_key=NULL,  ...) {
   x = nn_locals_to_list(...)
   x = add_schema_type(x, "integer")
   class(x) = c("schema_int","schema", "list")
@@ -93,7 +93,7 @@ schema_int = function(descr=NULL, allow_null = FALSE, enum=NULL, minimum=NULL, e
 
 
 
-schema_num = function(descr=NULL, allow_null=FALSE, enum=NULL, minimum=NULL, exclusiveMinimum=NULL, maximum=NULL, exclusiveMaximum=NULL,is_key=NULL,  ...) {
+schema_num = function(descr=NULL, allow_null=NULL, enum=NULL, minimum=NULL, exclusiveMinimum=NULL, maximum=NULL, exclusiveMaximum=NULL,is_key=NULL,  ...) {
   x = nn_locals_to_list(...)
   x = add_schema_type(x, "number")
   class(x) = c("schema_num", "schema", "list")
@@ -101,7 +101,7 @@ schema_num = function(descr=NULL, allow_null=FALSE, enum=NULL, minimum=NULL, exc
 }
 
 
-schema_bool = function(descr=NULL, allow_null = FALSE,is_key=NULL,  ...) {
+schema_bool = function(descr=NULL, allow_null = NULL,is_key=NULL,  ...) {
   x = nn_locals_to_list(...)
   x = add_schema_type(x, "bool")
   class(x) = c("schema_int","schema", "list")
