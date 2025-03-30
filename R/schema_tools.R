@@ -1,9 +1,9 @@
 
 # To do: add recursion for nested objects...
 schema_fields_to_rclasses = function(x, given_classes=NULL) {
-
+  restore.point("schema_fields_to_rclasses")
   if (is_schema_arr(x)) {
-    schema_fields_to_rclasses(x$item)
+    return(schema_fields_to_rclasses(x$items))
   }
   if (is_schema_obj(x)) {
     x = x$properties
